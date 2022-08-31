@@ -1,8 +1,7 @@
 #include <iostream>
+#include "../headers/Particle.h"
 
-class Particle {        // The class
-  public:              // Access specifier
-    Particle(float initRadius,
+Particle::Particle(float initRadius,
             float positionX, float positionY,
             float velocityX, float velocityY,
             float accelerationX, float accelerationY) {
@@ -17,28 +16,20 @@ class Particle {        // The class
 
         position[0] = positionX;
         position[1] = positionY;
+}
 
-    }
+void Particle::step_acceleration(){
+    // Nothing here yet
+}
 
-    void step_acceleration(){
-        // Nothing here yet
-    }
+void Particle::step_velocity(float deltaT){
+    // v = v + a deltaT
+    velocity[0] = velocity[0] + acceleration[0] * deltaT;
+    velocity[1] = velocity[1] + acceleration[1] * deltaT;
+}
 
-    void step_velocity(float deltaT){
-        // v = v + a deltaT
-        velocity[0] = velocity[0] + acceleration[0] * deltaT;
-        velocity[1] = velocity[1] + acceleration[1] * deltaT;
-    }
-
-    void step_position(float deltaT){
-        // s = s + v deltaT
-        position[0] = position[0] + velocity[0] * deltaT;
-        position[1] = position[1] + velocity[1] * deltaT;
-    }
-
-    private:
-        float radius;
-        float acceleration[2];
-        float velocity[2];
-        float position[2];
-};
+void Particle::step_position(float deltaT){
+    // s = s + v deltaT
+    position[0] = position[0] + velocity[0] * deltaT;
+    position[1] = position[1] + velocity[1] * deltaT;
+}

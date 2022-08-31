@@ -11,9 +11,9 @@ particle-sim: $(OBJ_FILES)
 	g++ $(LDFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	g++ $(CPPFLAGS) -c -o $@ $<
+	g++ -I/headers/Particle.h $(CPPFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(OBJ_DIR)/* *~
-
+	rm particle-sim
 
