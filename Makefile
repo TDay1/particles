@@ -14,6 +14,5 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	g++ -I/headers/Particle.h $(CPPFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(OBJ_DIR)/* *~
-	rm particle-sim
+	rm -f $(OBJ_DIR)/* *~ particle-sim out.txt out.mp4
 
