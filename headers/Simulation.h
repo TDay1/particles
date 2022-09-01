@@ -1,3 +1,4 @@
+# pragma once
 #include <vector>
 #include "../headers/Particle.h"
 
@@ -7,7 +8,7 @@ class Simulation {
     void setup();
     void step();
 
-    private:
-        std::vector<Particle*> particles;
-        int particleCount;
+    // Variables
+    std::vector<Particle*> particles;
+    int particleCount;
 };
