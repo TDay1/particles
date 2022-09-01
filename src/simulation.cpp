@@ -24,5 +24,13 @@ void Simulation::setup(){
 }
 
 void Simulation::step(){
-    
+    // Step all the particle velocities
+    for (int i = 0; i <particleCount; i++) {
+        particles.at(i)->step_velocity(deltaT);
+    }
+
+    for (int i = 0; i <particleCount; i++) {
+        particles.at(i)->step_position(deltaT);
+    }
+
 }

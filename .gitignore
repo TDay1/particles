@@ -3,3 +3,4 @@ obj/*
 particle-sim
 .vscode
 env
+.DS_Store

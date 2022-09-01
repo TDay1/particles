@@ -21,24 +21,18 @@ void Output::log(Simulation *sim)
         outputVector[particleIndex][1] = particle->position[1];
     }
 
-    // Print to debug
-    /*for (int i = 0; i < sim->particleCount; i++)
-    {
-        std::cout << outputVector[i][0] << ", " << outputVector[i][1] << std::endl;
-    }*/
-
     // Write data to text file
     std::fstream iofile;                                        // declare file pointer
-    iofile.open("./" + outputLocation + ".txt", std::ios::out); // Open file
+    iofile.open("./" + outputLocation + ".txt", std::ios::app); // Open file
 
-    // Save position array
-    iofile << '[' << '\n';
+    // Save flattened position array
     for (int i = 0; i < sim->particleCount; i++)
     {
-        iofile << outputVector[i][0] << '\t' << outputVector[i][1] << '\n';
+        iofile << outputVector[i][0] << '\t' << outputVector[i][1] << '\t';
     }
-    iofile << ']' << '\n';
 
+    // End array
+    iofile << '\n';
     
     // Clean up
     iofile.close();
