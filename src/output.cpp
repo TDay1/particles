@@ -18,7 +18,7 @@ void Output::log(Simulation *sim)
     {
         Particle *particle = sim->particles.at(particleIndex);
         outputVector[particleIndex][0] = particle->position[0];
-        outputVector[particleIndex][1] = particle->position[0];
+        outputVector[particleIndex][1] = particle->position[1];
     }
 
     // Print to debug

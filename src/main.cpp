@@ -9,7 +9,7 @@ int main() {
     float currentTime = 0.0f;
     
     // Setup sim
-    Simulation *sim = new Simulation(10);
+    Simulation *sim = new Simulation(10, TIMESTEP_SIZE);
     Output *logger = new Output(std::string("test"));
 
     // run sim
@@ -21,6 +21,6 @@ int main() {
 
     // Sim complete
     std::cout << "Simulation complete" << std::endl;
-    
+
     return 0;
 }
