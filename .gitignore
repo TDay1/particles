@@ -2,3 +2,4 @@ obj/*
 *.o
 particle-sim
 .vscode
+env
