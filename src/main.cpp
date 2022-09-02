@@ -20,7 +20,10 @@ int main() {
 
     // Sim loop
     while (currentTime < SIM_TIME) {
+        
+        // run simulation
         sim->step();
+
         if (stepCounter % sampleEvery == 0){
             logger->log(sim);
         }

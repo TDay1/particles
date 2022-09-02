@@ -42,11 +42,13 @@ void Output::log(Simulation *sim)
 void Output::run()
 {
     // Call Python to plot data
+    /*
     std::string command = "python debug/PlotingScripts/Plot2D_text.py " + outputLocation;
     int commLen = command.length();
     char *commandchar = new char[commLen + 1];          // declaring character array
     commandchar = strcpy(commandchar, command.c_str()); // copying the contents of the string to char array
     system(commandchar);                                // Creates the directory incase it does not exist
     delete[] commandchar;
+    */
 }
 

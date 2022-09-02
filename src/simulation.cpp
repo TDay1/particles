@@ -165,10 +165,6 @@ void Simulation::collisions(){
                 particles.at(i)->step_position(timeSinceCollision);
 
             }           
-
-        }
-        
+        }   
     }
-
-
 }
