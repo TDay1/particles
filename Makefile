@@ -3,7 +3,7 @@ OBJ_DIR := ./obj
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDFLAGS := 
-CPPFLAGS := -Wall -pedantic -o0
+CPPFLAGS := -Wall -pedantic -o3
 
 All: particle-sim
 

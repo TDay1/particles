@@ -2,6 +2,7 @@
 #include <vector>
 #include <random>
 #include <iostream>
+#include <cmath>
 #include "../headers/Particle.h"
 
 class Simulation {
@@ -9,6 +10,7 @@ class Simulation {
     Simulation(int nParticles, float timestep);
     void setup();
     void step();
+    void collisions();
 
     // Variables
     std::vector<Particle*> particles;

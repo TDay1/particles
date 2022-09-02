@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
-NUM_PARTICLES = 100
+NUM_PARTICLES = 200
 FRAME_RATE = 30
+SECONDS = 10
 
 # Read file
 data_file_dir='./out.txt'
@@ -16,13 +17,14 @@ fileIO.close()
 fileArray = fileArray.reshape((-1, NUM_PARTICLES, 2))
 
 # Animate
-
-
-numframes = FRAME_RATE*5
+numframes = FRAME_RATE*SECONDS
 color_data = '#0362fc'
 
 fig = plt.figure()
-scat = plt.scatter(fileArray[0,:, 0], fileArray[0,:, 1], c=color_data, s=10)
+scat = plt.scatter(fileArray[0,:, 0], fileArray[0,:, 1], c=color_data, s=20)
+plt.xlim(0, 100)
+plt.ylim(0, 100)
+
 
 
 def update_plot(i, data, scat):
