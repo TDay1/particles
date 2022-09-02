@@ -2,7 +2,16 @@
 
 Output::Output(std::string location)
 {
+
     outputLocation = location;
+
+    // Clean up old outfiles
+    std::fstream iofile;                                        // declare file pointer
+    iofile.open("./" + outputLocation + ".txt", std::ios::out); // Open file
+    iofile.close();
+
+    
+    
 }
 
 void Output::log(Simulation *sim)
