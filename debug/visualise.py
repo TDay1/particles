@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
-NUM_PARTICLES = 200
-FRAME_RATE = 30
-SECONDS = 10
+NUM_PARTICLES = 500
+FRAME_RATE = 60
+SECONDS = 15
 
 # Read file
-data_file_dir='./out.txt'
+data_file_dir='./out_visualise.txt'
 fileIO=open(data_file_dir,"r")
 fileArray=np.loadtxt(fileIO,unpack=False,skiprows=0) 
 fileIO.close()

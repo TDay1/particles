@@ -3,19 +3,19 @@
 
 class Particle {
   public:
-    Particle(float initRadius,
-            float positionX, float positionY,
-            float velocityX, float velocityY,
-            float accelerationX, float accelerationY);
+    Particle(double initRadius,
+            double positionX, double positionY,
+            double velocityX, double velocityY,
+            double accelerationX, double accelerationY);
    
     void step_acceleration();
 
-    void step_velocity(float deltaT);
+    void step_velocity(double deltaT);
 
-    void step_position(float deltaT);
+    void step_position(double deltaT);
 
-    float radius;
-    float acceleration[2];
-    float velocity[2];
-    float position[2];
+    double radius;
+    double acceleration[2];
+    double velocity[2];
+    double position[2];
 };

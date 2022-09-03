@@ -7,7 +7,7 @@
 
 class Simulation {
   public:
-    Simulation(int nParticles, float timestep);
+    Simulation(int nParticles, double timestep);
     void setup();
     void step();
     void collisions();
@@ -15,5 +15,5 @@ class Simulation {
     // Variables
     std::vector<Particle*> particles;
     int particleCount;
-    float deltaT;
+    double deltaT;
 };

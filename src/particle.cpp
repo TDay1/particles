@@ -1,10 +1,10 @@
 #include <iostream>
 #include "../headers/Particle.h"
 
-Particle::Particle(float initRadius,
-            float positionX, float positionY,
-            float velocityX, float velocityY,
-            float accelerationX, float accelerationY) {
+Particle::Particle(double initRadius,
+            double positionX, double positionY,
+            double velocityX, double velocityY,
+            double accelerationX, double accelerationY) {
 
         radius = initRadius;
 
@@ -22,13 +22,13 @@ void Particle::step_acceleration(){
     // Nothing here yet
 }
 
-void Particle::step_velocity(float deltaT){
+void Particle::step_velocity(double deltaT){
     // v = v + a deltaT
     velocity[0] = velocity[0] + acceleration[0] * deltaT;
     velocity[1] = velocity[1] + acceleration[1] * deltaT;
 }
 
-void Particle::step_position(float deltaT){
+void Particle::step_position(double deltaT){
     // s = s + v deltaT
     position[0] = position[0] + velocity[0] * deltaT;
     position[1] = position[1] + velocity[1] * deltaT;

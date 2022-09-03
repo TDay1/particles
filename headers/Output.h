@@ -6,11 +6,15 @@
 
 class Output {
   public:
-    Output(std::string location);
+    Output();
    
-    void log(Simulation *sim);
+    void log_visualise(Simulation *sim);
+    void log_cg(Simulation *sim);
+
 
     void run();
 
-    std::string outputLocation;
+    std::string visOutputLocation;
+    std::string cgOutputLocation;
+
 };
