@@ -3,7 +3,6 @@
 Simulation::Simulation(int nParticles, double timestep) {
         particleCount = nParticles;
         deltaT = timestep;
-        
         setup();
 }
 
@@ -24,7 +23,7 @@ void Simulation::setup(){
         double positionX = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
         double positionY = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
 
-        particles.push_back(new Particle(radius, positionX, positionY, 0.0f, 0.0f,  50.0f, -50.0f));
+        particles.push_back(new Particle(radius, positionX, positionY, 0.0f, 0.0f,  20.0f, 0.0f));
 
     }
 
@@ -57,8 +56,8 @@ void Simulation::collisions(){
             // 1. is there a collision?
             Particle* particleI = particles.at(i);
             Particle* particleJ = particles.at(j);
-
-            double radius = particleI->radius;
+            
+            double radius = particles.at(i)->radius;
 
             // Pythag
             double distance = sqrt(pow(particleI->position[0]-particleJ->position[0], 2) + pow(particleI->position[1]-particleJ->position[1], 2));
@@ -89,7 +88,7 @@ void Simulation::collisions(){
                 particleI->velocity[0] = (tx * dpTan1 + nx * dpNorm1) * frictionCoef;
                 particleI->velocity[1] = (ty * dpTan1 + ny * dpNorm1) *frictionCoef;
                 particleJ->velocity[0] = (tx * dpTan2 + nx * dpNorm2) *frictionCoef;
-                particleJ->velocity[1]= (ty * dpTan2 + ny * dpNorm2) *frictionCoef;
+                particleJ->velocity[1] = (ty * dpTan2 + ny * dpNorm2) *frictionCoef;
 
 
                 // Move so not overlapping
@@ -100,8 +99,6 @@ void Simulation::collisions(){
 
                 particleJ->position[0] += overlap * (particleI->position[0] - particleJ->position[0])/distance;
                 particleJ->position[1] += overlap * (particleI->position[1] - particleJ->position[1])/distance;
-                
-
 
                 // Now move particle missed amount of time
                 //particleI->step_position(deltaT/2);
@@ -111,77 +108,26 @@ void Simulation::collisions(){
     }
 
 
-    double radius = 1.0f;
     
+    // Every particle
     for (int i = 0; i < particleCount; i++) {
-        // Every particle
+        // Every dimension
+
         for (int dimension = 0; dimension < 2; dimension++){
-            // Every dimension
+            double radius = particles.at(i)->radius;
+
             if (particles.at(i)->position[dimension]-radius < 0.0f){
 
-                particles.at(i)->position[dimension] = 1.0f;
-
+                particles.at(i)->position[dimension] = 0.0f+radius;
                 particles.at(i)->velocity[dimension] = 0.0f;
-
             }
             if (particles.at(i)->position[dimension]+radius > 100.0f){
 
-                particles.at(i)->position[dimension] = 99.0f;
-
-                // Flip axis velocity
+                particles.at(i)->position[dimension] = 100.0f-radius;
                 particles.at(i)->velocity[dimension] = 0.0f;
 
             }
         }
     }
-
- 
-    
-    /*
-    for (int i = 0; i < particleCount; i++) {
-        // Every particle
-        for (int dimension = 0; dimension < 2; dimension++){
-            // Every dimension
-            if (particles.at(i)->position[dimension]-radius < 0.0f){
-                // However much less than 0 is the overlap
-                double overlap = fabs(particles.at(i)->position[dimension]-radius);
-
-                // Time overlapping = overlap/v
-                double timeSinceCollision = overlap/particles.at(i)->velocity[dimension];
-
-                // Reset particle position so not overlapping
-                particles.at(i)->position[dimension] = 1.0f;
-
-                // Flip axis velocity
-                if (particles.at(i)->velocity[dimension] < 0.0f){
-                    particles.at(i)->velocity[dimension] *= -0.5f;
-                }
-
-                // Give particle back its lost time
-                if(!isinf(timeSinceCollision)) {
-                    particles.at(i)->step_position(timeSinceCollision);
-                }
-            }
-            if (particles.at(i)->position[dimension]+radius > 100.0f){
-                // However much less than 0 is the overlap
-                double overlap = fabs(particles.at(i)->position[dimension]+radius - 100.0f);
-
-                // Time overlapping = overlap/v
-                double timeSinceCollision = overlap/particles.at(i)->velocity[dimension];
-
-                particles.at(i)->position[dimension] = 99.0f;
-
-                // Flip axis velocity
-                if (particles.at(i)->velocity[dimension] > 0.0f){
-                    particles.at(i)->velocity[dimension] *= -0.5f;
-                }
-                // Give particle back its lost time
-                if(!isinf(timeSinceCollision)) {
-                    particles.at(i)->step_position(timeSinceCollision);
-                }
-            }
-        }
-    }
-    */
 
 }

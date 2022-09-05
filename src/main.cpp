@@ -4,11 +4,11 @@
 #include "../headers/Output.h"
 
 int main() {  
-    double SIM_TIME = 15.0f;
-    double TIMESTEP_SIZE = 0.00005f;
+    double SIM_TIME = 10.0f;
+    double TIMESTEP_SIZE = 0.005f;
     double currentTime = 0.0f;
 
-    int OUTPUT_FRAME_RATE = 60;
+    int OUTPUT_FRAME_RATE = 30;
     int sampleEvery = ( ( static_cast<int> (1/TIMESTEP_SIZE)) / OUTPUT_FRAME_RATE);
     
     // Setup sim
@@ -27,7 +27,6 @@ int main() {
         if (stepCounter % sampleEvery == 0){
             logger->log_visualise(sim);
             logger->log_cg(sim);
-
         }
 
         if (stepCounter % (sampleEvery*OUTPUT_FRAME_RATE) == 0){

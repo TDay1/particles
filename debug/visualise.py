@@ -3,7 +3,7 @@ import matplotlib.animation as animation
 import numpy as np
 
 NUM_PARTICLES = 500
-FRAME_RATE = 60
+FRAME_RATE = 30
 SECONDS = 15
 
 # Read file
@@ -20,11 +20,9 @@ numframes = FRAME_RATE*SECONDS
 color_data = '#0362fc'
 
 fig = plt.figure()
-scat = plt.scatter(fileArray[0,:, 0], fileArray[0,:, 1], c=color_data, s=20)
+scat = plt.scatter(fileArray[0,:, 0], fileArray[0,:, 1], c=color_data, s=25)
 plt.xlim(0, 100)
 plt.ylim(0, 100)
-
-
 
 def update_plot(i, data, scat):
     scat.set_offsets(data[i])
