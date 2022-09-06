@@ -11,7 +11,7 @@ int main() {
     int OUTPUT_FRAME_RATE = 30;
     int sampleEvery = ( ( static_cast<int> (1/TIMESTEP_SIZE)) / OUTPUT_FRAME_RATE);
 
-    for (double NUM_PARTICLES = 200; NUM_PARTICLES <= 1000; NUM_PARTICLES+=50){
+    for (double NUM_PARTICLES = 50; NUM_PARTICLES <= 1000; NUM_PARTICLES+=50){
 
         // Using time point and system_clock
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
