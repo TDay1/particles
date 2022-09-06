@@ -5,7 +5,7 @@
 
 int main() {  
     double SIM_TIME = 10.0f;
-    double TIMESTEP_SIZE = 0.005f;
+    double TIMESTEP_SIZE = 0.00005f;
     double currentTime = 0.0f;
 
     int OUTPUT_FRAME_RATE = 30;
