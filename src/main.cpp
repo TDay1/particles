@@ -6,7 +6,6 @@
 int main() {  
 
     // Below are the simulation variables:
-
     // How long the sim runs for
     double SIM_TIME = 5.0f;
     // Timestep size of the sim
@@ -18,7 +17,7 @@ int main() {
     // The acceleration of the tank along the y axis
     double ACCELERATION_Y = -10.0f;
     // How many particles to simulate
-    int NUMBER_OF_PARTICLES = 750;
+    int NUMBER_OF_PARTICLES = 500;
 
 
     // Sample rate for logging

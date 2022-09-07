@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
-NUM_PARTICLES = 750
+NUM_PARTICLES = 500
 FRAME_RATE = 30
 SECONDS = 5
 

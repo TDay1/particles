@@ -3,17 +3,17 @@
 Output::Output()
 {
 
-    visOutputLocation = std::string("out_visualise");
-    cgOutputLocation = std::string("out_cg");
+    visOutputLocation = std::string("./out_visualise");
+    cgOutputLocation = std::string("./out_cg");
 
 
     // Clean up old outfiles
     std::fstream iofile;                                        // declare file pointer
-    iofile.open("./" + visOutputLocation + ".txt", std::ios::out); // Open file
+    iofile.open(visOutputLocation + ".txt", std::ios::out); // Open file
     iofile.close();
 
         // Clean up old outfiles
-    iofile.open("./" + cgOutputLocation + ".txt", std::ios::out); // Open file
+    iofile.open(cgOutputLocation + ".txt", std::ios::out); // Open file
     iofile.close();
     
 }
@@ -35,7 +35,7 @@ void Output::log_visualise(Simulation *sim)
 
     // Write data to text file
     std::fstream iofile;                                        // declare file pointer
-    iofile.open("./" + visOutputLocation + ".txt", std::ios::app); // Open file
+    iofile.open(visOutputLocation + ".txt", std::ios::app); // Open file
 
     // Save flattened position array
     for (int i = 0; i < sim->particleCount; i++)
@@ -71,7 +71,7 @@ void Output::log_cg(Simulation *sim) {
 
     // Write data to text file
     std::fstream iofile;                                        // declare file pointer
-    iofile.open("./" + cgOutputLocation + ".txt", std::ios::app); // Open file
+    iofile.open(cgOutputLocation + ".txt", std::ios::app); // Open file
 
     // Save cg
     iofile << xCentreGravity << '\t' << yCentreGravity << '\n';
