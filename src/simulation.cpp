@@ -1,21 +1,19 @@
 #include "../headers/Simulation.h"
 
-Simulation::Simulation(int nParticles, double timestep) {
+Simulation::Simulation(int nParticles, double timestep, double tankAccelerationX, double tankAccelerationY) {
         particleCount = nParticles;
         deltaT = timestep;
-        setup();
+        setup(tankAccelerationX, tankAccelerationY);
 }
 
-void Simulation::setup(){
+void Simulation::setup(double particleAccelerationX, double particleAccelerationY){
     // Generate particles
     particles = std::vector<Particle*>();
     particles.reserve(particleCount);
 
-    double positionMax = 100.0f;
-    double positionMin = 0.0f;
-
     double radius = 1.0f;
 
+    // Helpful for consistency across tests
     srand(1);
 
     for (int i = 0; i < particleCount; i++) {
@@ -23,7 +21,7 @@ void Simulation::setup(){
         double positionX = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
         double positionY = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
 
-        particles.push_back(new Particle(radius, positionX, positionY, 0.0f, 0.0f,  20.0f, 0.0f));
+        particles.push_back(new Particle(radius, positionX, positionY, 0.0f, 0.0f,  particleAccelerationX, particleAccelerationY));
 
     }
 
@@ -48,8 +46,6 @@ void Simulation::step(){
 
 void Simulation::collisions(){
 
-    double frictionCoef = 1;
-
     // fluid (particle-particle) collisions    
     for (int i = 0; i < particleCount; i++) {
         for (int j = i+1; j < particleCount; j++) {
@@ -67,28 +63,28 @@ void Simulation::collisions(){
                 double nx = (particleJ->position[0] - particleI->position[0]) / distance;
                 double ny = (particleJ->position[1] - particleI->position[1]) / distance;
 
-                // Tangent
+                // inner product the normal and velocity
+                double innerNormalI = particleI->velocity[0] * nx + particleI->velocity[1] * ny;
+                double innerNormalJ = particleJ->velocity[0] * nx + particleJ->velocity[1] * ny;
+
+
+                // Calculate the tangent
                 double tx = -ny;
                 double ty = nx;
 
-                // dot product tangent
-                double dpTan1 = particleI->velocity[0] * tx + particleI->velocity[1] * ty;
-                double dpTan2 = particleJ->velocity[0] * tx + particleJ->velocity[1] * ty;
-
-                // Dot prod norm
-                double dpNorm1 = particleI->velocity[0] * nx + particleI->velocity[1] * ny;
-                double dpNorm2 = particleJ->velocity[0] * nx + particleJ->velocity[1] * ny;
-
+                // inner product the tangent and velocity
+                double innerTangentI = particleI->velocity[0] * tx + particleI->velocity[1] * ty;
+                double innerTangentJ = particleJ->velocity[0] * tx + particleJ->velocity[1] * ty;
 
 			    // Conservation of momentum in 1D
                 // Let mass = 1
-                // momentum 1 and two end up being equal to dpNorm1 and dpNorm2 because m1=m2
+                // momentum one and two end up being equal to innerNormal1 and innerNormal2 because m1=m2
 
                 // Update the velocities
-                particleI->velocity[0] = (tx * dpTan1 + nx * dpNorm1) * frictionCoef;
-                particleI->velocity[1] = (ty * dpTan1 + ny * dpNorm1) *frictionCoef;
-                particleJ->velocity[0] = (tx * dpTan2 + nx * dpNorm2) *frictionCoef;
-                particleJ->velocity[1] = (ty * dpTan2 + ny * dpNorm2) *frictionCoef;
+                particleI->velocity[0] = (tx * innerTangentI + nx * innerNormalI);
+                particleI->velocity[1] = (ty * innerTangentI + ny * innerNormalI);
+                particleJ->velocity[0] = (tx * innerTangentJ + nx * innerNormalJ);
+                particleJ->velocity[1] = (ty * innerTangentJ + ny * innerNormalJ);
 
 
                 // Move so not overlapping
@@ -99,10 +95,6 @@ void Simulation::collisions(){
 
                 particleJ->position[0] += overlap * (particleI->position[0] - particleJ->position[0])/distance;
                 particleJ->position[1] += overlap * (particleI->position[1] - particleJ->position[1])/distance;
-
-                // Now move particle missed amount of time
-                //particleI->step_position(deltaT/2);
-                //particleJ->step_position(deltaT/2);
             }
         }
     }

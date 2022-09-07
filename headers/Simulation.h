@@ -7,8 +7,8 @@
 
 class Simulation {
   public:
-    Simulation(int nParticles, double timestep);
-    void setup();
+    Simulation(int nParticles, double timestep, double tankAccelerationX, double tankAccelerationY);
+    void setup(double particleAccelerationX, double particleAccelerationY);
     void step();
     void collisions();
 

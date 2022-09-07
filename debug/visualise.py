@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
-NUM_PARTICLES = 500
+NUM_PARTICLES = 750
 FRAME_RATE = 30
-SECONDS = 15
+SECONDS = 5
 
 # Read file
 data_file_dir='./out_visualise.txt'
