@@ -1,11 +1,14 @@
 #include "../headers/Simulation.h"
 
+// Constructor for the simulation
 Simulation::Simulation(int nParticles, double timestep, double tankAccelerationX, double tankAccelerationY) {
         particleCount = nParticles;
         deltaT = timestep;
         setup(tankAccelerationX, tankAccelerationY);
 }
 
+// Sets up a simulation by instanciating the particles and assigning
+// them random displacements.
 void Simulation::setup(double particleAccelerationX, double particleAccelerationY){
     // Generate particles
     particles = std::vector<Particle*>();
@@ -17,16 +20,14 @@ void Simulation::setup(double particleAccelerationX, double particleAcceleration
     srand(1);
 
     for (int i = 0; i < particleCount; i++) {
-                
         double positionX = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
         double positionY = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
 
         particles.push_back(new Particle(radius, positionX, positionY, 0.0f, 0.0f,  particleAccelerationX, particleAccelerationY));
-
     }
-
 }
 
+// Steps the simulation one timestep
 void Simulation::step(){
     // Step all the particle velocities
     for (int i = 0; i <particleCount; i++) {
@@ -43,7 +44,7 @@ void Simulation::step(){
     
 }
 
-
+// Resolves collisions after a timestep.
 void Simulation::collisions(){
 
     // fluid (particle-particle) collisions    
@@ -99,12 +100,9 @@ void Simulation::collisions(){
         }
     }
 
-
-    
     // Every particle
     for (int i = 0; i < particleCount; i++) {
         // Every dimension
-
         for (int dimension = 0; dimension < 2; dimension++){
             double radius = particles.at(i)->radius;
 

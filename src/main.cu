@@ -37,15 +37,18 @@ int main() {
         // run simulation
         sim->step();
 
+        // If this step in the sim is a sample step, sample it.
         if (stepCounter % sampleEvery == 0){
             logger->log_visualise(sim);
             logger->log_cg(sim);
         }
 
+        // Every second print simulation time that has elapsed.
         if (stepCounter % (sampleEvery*OUTPUT_FRAME_RATE) == 0){
             std::cout << "Completed " << currentTime << "s" << std::endl;
         }
 
+        // increment current time
         currentTime += TIMESTEP_SIZE;
         stepCounter++;
     }
