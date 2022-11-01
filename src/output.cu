@@ -1,7 +1,6 @@
 #include "../headers/Output.h"
 
-Output::Output()
-{
+Output::Output(Simulation* simulationData) {
 
     visOutputLocation = std::string("./out_visualise");
     cgOutputLocation = std::string("./out_cg");
@@ -12,25 +11,25 @@ Output::Output()
     iofile.open(visOutputLocation + ".txt", std::ios::out); // Open file
     iofile.close();
 
-        // Clean up old outfiles
+    // Clean up old outfiles
     iofile.open(cgOutputLocation + ".txt", std::ios::out); // Open file
     iofile.close();
+
+    simulation = simulationData;
     
 }
 
-void Output::log_visualise(Simulation *sim)
-{
-    double **outputVector = new double *[sim->particleCount];
-    for (int i = 0; i < sim->particleCount; i++)
+void Output::log_visualise(ParticleData *particleData) {
+    double **outputVector = new double *[simulation->numParticles];
+    for (int i = 0; i < simulation->numParticles; i++)
     {
         outputVector[i] = new double[2];
     }
 
-    for (int particleIndex = 0; particleIndex < sim->particleCount; particleIndex++)
+    for (int particleIndex = 0; particleIndex < simulation->numParticles; particleIndex++)
     {
-        Particle *particle = sim->particles.at(particleIndex);
-        outputVector[particleIndex][0] = particle->position[0];
-        outputVector[particleIndex][1] = particle->position[1];
+        outputVector[particleIndex][0] = particleData->positionX[particleIndex];
+        outputVector[particleIndex][1] = particleData->positionY[particleIndex];
     }
 
     // Write data to text file
@@ -38,7 +37,7 @@ void Output::log_visualise(Simulation *sim)
     iofile.open(visOutputLocation + ".txt", std::ios::app); // Open file
 
     // Save flattened position array
-    for (int i = 0; i < sim->particleCount; i++)
+    for (int i = 0; i < simulation->numParticles; i++)
     {
         iofile << outputVector[i][0] << '\t' << outputVector[i][1] << '\t';
     }
@@ -51,7 +50,7 @@ void Output::log_visualise(Simulation *sim)
 }
 
 // Logs the centre of gravity
-void Output::log_cg(Simulation *sim) {
+/*void Output::log_cg(Simulation *sim) {
     double xCentreGravity = 0.0f;
     double yCentreGravity = 0.0f;
 
@@ -79,19 +78,4 @@ void Output::log_cg(Simulation *sim) {
     // Clean up
     iofile.close();
 }
-
-
-// taken  from plotting c++ to python
-void Output::run()
-{
-    // Call Python to plot data
-    /*
-    std::string command = "python debug/PlotingScripts/Plot2D_text.py " + visOutputLocation;
-    int commLen = command.length();
-    char *commandchar = new char[commLen + 1];          // declaring character array
-    commandchar = strcpy(commandchar, command.c_str()); // copying the contents of the string to char array
-    system(commandchar);                                // Creates the directory incase it does not exist
-    delete[] commandchar;
-    */
-}
-
+*/

@@ -1,72 +1,76 @@
 #include "../headers/Simulation.h"
 
-// Constructor for the simulation
-Simulation::Simulation(int nParticles, double timestep, double tankAccelerationX, double tankAccelerationY) {
-        particleCount = nParticles;
-        deltaT = timestep;
-        setup(tankAccelerationX, tankAccelerationY);
-}
+// Initialise the simulation and its variables
+ParticleData* setupSimulation(Simulation* simulation) {
+    // Allocate a simulation structure
+    ParticleData* particleData = static_cast<ParticleData*>(malloc(sizeof(ParticleData)));
 
-// Sets up a simulation by instanciating the particles and assigning
-// them random displacements.
-void Simulation::setup(double particleAccelerationX, double particleAccelerationY){
-    // Generate particles
-    particles = std::vector<Particle*>();
-    particles.reserve(particleCount);
+    // Allocate vectors that hold particle data
+    particleData->positionX = static_cast<double*>(calloc(simulation->numParticles, sizeof(double)));
+    particleData->positionY = static_cast<double*>(calloc(simulation->numParticles, sizeof(double)));
+    particleData->velocityX = static_cast<double*>(calloc(simulation->numParticles, sizeof(double)));
+    particleData->velocityY = static_cast<double*>(calloc(simulation->numParticles, sizeof(double)));
+    particleData->accelerationX = static_cast<double*>(calloc(simulation->numParticles, sizeof(double)));
+    particleData->accelerationY = static_cast<double*>(calloc(simulation->numParticles, sizeof(double)));
 
-    double radius = 1.0f;
-
-    // Helpful for consistency across tests
+    // Initialise the particles locations
     srand(1);
+    for (int i = 0; i < simulation->numParticles; i++) {
+        // Give each particle an initial random X and Y location.
+        particleData->positionX[i] = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
+        particleData->positionY[i] = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
+    }
 
-    for (int i = 0; i < particleCount; i++) {
-        double positionX = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
-        double positionY = (static_cast <double> (rand()) / (static_cast <double> (RAND_MAX/90.0f))) + 5.0f;
+    return particleData;
+}
 
-        particles.push_back(new Particle(radius, positionX, positionY, 0.0f, 0.0f,  particleAccelerationX, particleAccelerationY));
+// Step the simulation one step
+void stepSimulation(Simulation* simulation, ParticleData* particleData) {
+    // Step Particle velocities
+    stepVelocities(simulation, particleData);
+
+    // resolve collisions
+    collisions(simulation, particleData);
+
+    // Step positions
+    stepPositions(simulation, particleData);
+}
+
+void stepVelocities(Simulation* simulation, ParticleData* particleData) {
+    // Can be vectorised
+    for (int i = 0; i < simulation->numParticles; i++) {
+        particleData->velocityX[i] = particleData->velocityX[i] + simulation->accelerationX * simulation->timestepSize;
+        particleData->velocityY[i] = particleData->velocityY[i] + simulation->accelerationY * simulation->timestepSize;
     }
 }
 
-// Steps the simulation one timestep
-void Simulation::step(){
-    // Step all the particle velocities
-    for (int i = 0; i <particleCount; i++) {
-        particles.at(i)->step_velocity(deltaT);
+void stepPositions(Simulation* simulation, ParticleData* particleData) {
+    // Can be vectorised
+    for (int i = 0; i < simulation->numParticles; i++) {
+        particleData->positionX[i] = particleData->positionX[i] + particleData->velocityY[i] * simulation->timestepSize;
+        particleData->positionY[i] = particleData->positionY[i] + particleData->velocityY[i] * simulation->timestepSize;
     }
-
-    // Collision engine will overwrite some of the velocities and positions
-    collisions();
-
-    // Calculate particle position after step
-    for (int i = 0; i <particleCount; i++) {
-        particles.at(i)->step_position(deltaT);
-    }
-    
 }
 
-// Resolves collisions after a timestep.
-void Simulation::collisions(){
+void collisions(Simulation* simulation, ParticleData* particleData) {
 
     // fluid (particle-particle) collisions    
-    for (int i = 0; i < particleCount; i++) {
-        for (int j = i+1; j < particleCount; j++) {
-            // 1. is there a collision?
-            Particle* particleI = particles.at(i);
-            Particle* particleJ = particles.at(j);
-            
-            double radius = particles.at(i)->radius;
+    for (int i = 0; i < simulation->numParticles; i++) {
+        for (int j = i+1; j < simulation->numParticles; j++) {
+            double radius = simulation->radius;
 
             // Pythag
-            double distance = sqrt(pow(particleI->position[0]-particleJ->position[0], 2) + pow(particleI->position[1]-particleJ->position[1], 2));
+            double distance = sqrt(pow(particleData->positionX[i]-particleData->positionX[j], 2) + pow(particleData->positionY[i]-particleData->positionY[j], 2));
 
+            // 1. is there a collision?
             if (distance < 2*radius) {
                 // Calculate the Normal
-                double nx = (particleJ->position[0] - particleI->position[0]) / distance;
-                double ny = (particleJ->position[1] - particleI->position[1]) / distance;
+                double nx = (particleData->positionX[j] - particleData->positionX[i]) / distance;
+                double ny = (particleData->positionY[j] - particleData->positionY[i]) / distance;
 
                 // inner product the normal and velocity
-                double innerNormalI = particleI->velocity[0] * nx + particleI->velocity[1] * ny;
-                double innerNormalJ = particleJ->velocity[0] * nx + particleJ->velocity[1] * ny;
+                double innerNormalI = particleData->velocityX[i] * nx + particleData->velocityY[i] * ny;
+                double innerNormalJ = particleData->velocityX[j] * nx + particleData->velocityY[j] * ny;
 
 
                 // Calculate the tangent
@@ -74,50 +78,75 @@ void Simulation::collisions(){
                 double ty = nx;
 
                 // inner product the tangent and velocity
-                double innerTangentI = particleI->velocity[0] * tx + particleI->velocity[1] * ty;
-                double innerTangentJ = particleJ->velocity[0] * tx + particleJ->velocity[1] * ty;
+                double innerTangentI = particleData->velocityX[i] * tx + particleData->velocityY[i] * ty;
+                double innerTangentJ = particleData->velocityX[j] * tx + particleData->velocityY[j] * ty;
 
-			    // Conservation of momentum in 1D
+                // Conservation of momentum in 1D
                 // Let mass = 1
                 // momentum one and two end up being equal to innerNormal1 and innerNormal2 because m1=m2
 
                 // Update the velocities
-                particleI->velocity[0] = (tx * innerTangentI + nx * innerNormalI);
-                particleI->velocity[1] = (ty * innerTangentI + ny * innerNormalI);
-                particleJ->velocity[0] = (tx * innerTangentJ + nx * innerNormalJ);
-                particleJ->velocity[1] = (ty * innerTangentJ + ny * innerNormalJ);
+                particleData->velocityX[i] = (tx * innerTangentI + nx * innerNormalI);
+                particleData->velocityY[i] = (ty * innerTangentI + ny * innerNormalI);
+                particleData->velocityX[j] = (tx * innerTangentJ + nx * innerNormalJ);
+                particleData->velocityY[j] = (ty * innerTangentJ + ny * innerNormalJ);
 
 
                 // Move so not overlapping
                 double overlap = 0.5f * (distance - (2.0f*radius));
 
-                particleI->position[0] -= overlap * (particleI->position[0] - particleJ->position[0])/distance;
-                particleI->position[1] -= overlap * (particleI->position[1] - particleJ->position[1])/distance;
+                particleData->positionX[i] -= overlap * (particleData->positionX[i] - particleData->positionX[j])/distance;
+                particleData->positionY[i] -= overlap * (particleData->positionY[i] - particleData->positionY[j])/distance;
 
-                particleJ->position[0] += overlap * (particleI->position[0] - particleJ->position[0])/distance;
-                particleJ->position[1] += overlap * (particleI->position[1] - particleJ->position[1])/distance;
+                particleData->positionX[j] += overlap * (particleData->positionX[i] - particleData->positionX[j])/distance;
+                particleData->positionY[j] += overlap * (particleData->positionY[i] - particleData->positionY[j])/distance;
             }
         }
     }
 
-    // Every particle
-    for (int i = 0; i < particleCount; i++) {
-        // Every dimension
-        for (int dimension = 0; dimension < 2; dimension++){
-            double radius = particles.at(i)->radius;
 
-            if (particles.at(i)->position[dimension]-radius < 0.0f){
 
-                particles.at(i)->position[dimension] = 0.0f+radius;
-                particles.at(i)->velocity[dimension] = 0.0f;
-            }
-            if (particles.at(i)->position[dimension]+radius > 100.0f){
+    // Evaluate wall conditions
+    for (int i = 0; i < simulation->numParticles; i++) {
 
-                particles.at(i)->position[dimension] = 100.0f-radius;
-                particles.at(i)->velocity[dimension] = 0.0f;
+        // x dimension (can be its own kernel)
+        if (particleData->positionX[i] - simulation->radius < 0.0f){
 
-            }
+            particleData->positionX[i] = 0.0f + simulation->radius;
+            particleData->velocityX[i] = 0.0f;
+        }
+        if (particleData->positionX[i] + simulation->radius > 100.0f){
+
+            particleData->positionX[i] = 100.0f - simulation->radius;
+            particleData->velocityX[i] = 0.0f;
+
+        }
+
+        // y dimension (can be its own kernel)
+        if (particleData->positionY[i] - simulation->radius < 0.0f){
+
+            particleData->positionY[i] = 0.0f + simulation->radius;
+            particleData->velocityY[i] = 0.0f;
+        }
+        if (particleData->positionY[i] + simulation->radius > 100.0f){
+
+            particleData->positionY[i] = 100.0f - simulation->radius;
+            particleData->velocityY[i] = 0.0f;
+
         }
     }
+}
 
+void cleanupSimulation(Simulation* simulation, ParticleData* particleData) {
+    // Free the simulation
+    free(simulation);
+
+    // Free the particle data
+    free(particleData->positionX);
+    free(particleData->positionY);
+    free(particleData->velocityX);
+    free(particleData->velocityY);
+    free(particleData->accelerationX);
+    free(particleData->accelerationY);
+    free(particleData);
 }
