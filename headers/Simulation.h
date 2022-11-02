@@ -5,15 +5,34 @@
 #include <cmath>
 #include "../headers/Particle.h"
 
-class Simulation {
-  public:
-    Simulation(int nParticles, double timestep, double tankAccelerationX, double tankAccelerationY);
-    void setup(double particleAccelerationX, double particleAccelerationY);
-    void step();
-    void collisions();
+// Holds displacement, velocity, acceleration data of all particles
+typedef struct ParticleData {
+  double* positionX;
+  double* positionY;
+  double* velocityX;
+  double* velocityY;
+  double* accelerationX;
+  double* accelerationY;
+} ParticleData;
 
-    // Variables
-    std::vector<Particle*> particles;
-    int particleCount;
-    double deltaT;
-};
+// Structure holds the simulation config data
+typedef struct Simulation {
+    double simTime;
+    double timestepSize;
+    int outputFrameRate;
+    double accelerationX;
+    double accelerationY;
+    int numParticles;
+    double radius;
+} Simulation;
+
+ParticleData* setupSimulation(Simulation* simulation);
+void stepSimulation(Simulation* simulation, ParticleData* particleData);
+__global__
+void stepVelocities(Simulation* simulation, ParticleData* particleData);
+__global__
+void stepPositions(Simulation* simulation, ParticleData* particleData);
+void particleCollisions(Simulation* simulation, ParticleData* particleData, double* distances);
+__global__
+void wallCollisions(Simulation* simulation, ParticleData* particleData);
+void cleanupSimulation(Simulation* simulation, ParticleData* particleData);

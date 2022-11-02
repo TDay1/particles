@@ -6,9 +6,9 @@
 
 class Output {
   public:
-    Output();
+    Output(Simulation* simulationData);
    
-    void log_visualise(Simulation *sim);
+    void log_visualise(ParticleData *particleData);
     void log_cg(Simulation *sim);
 
 
@@ -16,5 +16,5 @@ class Output {
 
     std::string visOutputLocation;
     std::string cgOutputLocation;
-
+    Simulation* simulation;
 };
