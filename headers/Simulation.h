@@ -28,7 +28,11 @@ typedef struct Simulation {
 
 ParticleData* setupSimulation(Simulation* simulation);
 void stepSimulation(Simulation* simulation, ParticleData* particleData);
+__global__
 void stepVelocities(Simulation* simulation, ParticleData* particleData);
+__global__
 void stepPositions(Simulation* simulation, ParticleData* particleData);
-void collisions(Simulation* simulation, ParticleData* particleData);
+void particleCollisions(Simulation* simulation, ParticleData* particleData, double* distances);
+__global__
+void wallCollisions(Simulation* simulation, ParticleData* particleData);
 void cleanupSimulation(Simulation* simulation, ParticleData* particleData);
