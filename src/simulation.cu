@@ -41,7 +41,7 @@ void stepSimulation(Simulation* simulation, ParticleData* particleData) {
     stepVelocities<<<blocks, threads>>>(simulation, particleData);
     cudaDeviceSynchronize();
 
-    particleCollisions(simulation, particleData, distances);
+    particleCollisions(simulation, particleData);
 
     // Resolve particle-wall collisions
     wallCollisions<<<blocks, threads>>>(simulation, particleData);
@@ -77,7 +77,7 @@ void stepPositions(Simulation* simulation, ParticleData* particleData) {
     }
 }
 
-void particleCollisions(Simulation* simulation, ParticleData* particleData, double* distances) {
+void particleCollisions(Simulation* simulation, ParticleData* particleData) {
     //int index = threadIdx.x + blockIdx.x * blockDim.x;
     //int stride = blockDim.x * gridDim.x;
     
@@ -87,10 +87,9 @@ void particleCollisions(Simulation* simulation, ParticleData* particleData, doub
             double radius = simulation->radius;
 
             // Pythag
-            //double distance = sqrt(pow(particleData->positionX[i]-particleData->positionX[j], 2) 
-            //+ pow(particleData->positionY[i]-particleData->positionY[j], 2));
+            double distance = sqrt(pow(particleData->positionX[i]-particleData->positionX[j], 2) 
+                + pow(particleData->positionY[i]-particleData->positionY[j], 2));
 
-            double distance = distances[i * simulation->numParticles + j];
 
             // 1. is there a collision?
             // Calculate the Normal
