@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "../headers/Simulation.h"
+#include "../headers/main.h"
 
 class Output {
   public:

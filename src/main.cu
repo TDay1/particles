@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 #include <chrono>
+#include "../headers/main.h"
 #include "../headers/Simulation.h"
 #include "../headers/Output.h"
-
 #define TIMESTEP_SIZE 0.00005f
 
 int main() {  
@@ -62,47 +62,10 @@ int main() {
         stepCounter++;
     }
     
-
-    /*
-    // Sample rate for logging
-    int sampleEvery = ( ( static_cast<int> (1/TIMESTEP_SIZE)) / OUTPUT_FRAME_RATE);
-
-    // Setup sim
-    Simulation *sim = new Simulation(NUMBER_OF_PARTICLES, TIMESTEP_SIZE, ACCELERATION_X, ACCELERATION_Y);
-    Output *logger = new Output();
-
-    // run sim main
-    int stepCounter = 0;
-
-    // Sim loop
-    double currentTime = 0.0f;
-    while (currentTime < SIM_TIME) {
-        
-        // run simulation
-        sim->step();
-
-        // If this step in the sim is a sample step, sample it.
-        //if (stepCounter % sampleEvery == 0){
-        //    logger->log_visualise(sim);
-        //    logger->log_cg(sim);
-        //}
-
-        // Every second print simulation time that has elapsed.
-        if (stepCounter % (sampleEvery*OUTPUT_FRAME_RATE) == 0){
-            std::cout << "Completed " << currentTime << "s" << std::endl;
-        }
-
-        // increment current time
-        currentTime += TIMESTEP_SIZE;
-        stepCounter++;
-    }
-
-    */
     // Sim complete
     auto FinishTime = std::chrono::high_resolution_clock::now();
     auto TotalTime = std::chrono::duration_cast<std::chrono::microseconds>(FinishTime - StartTime);
     std::cout << "Main loop completed in: " << TotalTime.count() << std::endl;
-    //std::cout << "Simulation complete" << std::endl;
 
     cleanupSimulation(simulation, particleData);
     return 0;
