@@ -50,25 +50,19 @@ void Output::log_visualise(ParticleData *particleData) {
 }
 
 // Logs the centre of gravity
-/*void Output::log_cg(Simulation *sim) {
+void Output::log_cg(ParticleData *particleData) {
+
     double xCentreGravity = 0.0f;
     double yCentreGravity = 0.0f;
 
-    for (int i = 0; i < sim->particleCount; i++) {
-        xCentreGravity += sim->particles.at(i)->position[0];
-        //std::cout << sim->particles.at(i)->position[0] << std::endl;
-
-        yCentreGravity += sim->particles.at(i)->position[1];
+    for (int i = 0; i < simulation->numParticles; i++) {
+        xCentreGravity += particleData->positionX[i];
+        yCentreGravity += particleData->positionY[i];
     }
 
-    //std::cout << xCentreGravity << std::endl;
+    xCentreGravity /= simulation->numParticles;
+    yCentreGravity /= simulation->numParticles;
 
-    xCentreGravity /= sim->particleCount;
-    yCentreGravity /= sim->particleCount;
-
-    //std::cout << xCentreGravity << std::endl;
-
-    // Write data to text file
     std::fstream iofile;                                        // declare file pointer
     iofile.open(cgOutputLocation + ".txt", std::ios::app); // Open file
 
@@ -78,4 +72,3 @@ void Output::log_visualise(ParticleData *particleData) {
     // Clean up
     iofile.close();
 }
-*/

@@ -9,7 +9,7 @@ class Output {
     Output(Simulation* simulationData);
    
     void log_visualise(ParticleData *particleData);
-    void log_cg(Simulation *sim);
+    void log_cg(ParticleData *particleData);
 
 
     void run();

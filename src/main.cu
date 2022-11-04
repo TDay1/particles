@@ -51,7 +51,7 @@ int main() {
         // log
         if (stepCounter % sampleEvery == 0){
             logger->log_visualise(particleData);
-            //logger->log_cg(sim);
+            logger->log_cg(particleData);
         }
 
         // Print progress
