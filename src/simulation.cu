@@ -63,7 +63,7 @@ void stepPositions(Simulation* simulation, ParticleData* particleData) {
     //for (int i = index; i < simulation->numParticles; i += stride) {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     if (i < simulation->numParticles) { 
-        particleData->positionX[i] = particleData->positionX[i] + particleData->velocityY[i] * simulation->timestepSize;
+        particleData->positionX[i] = particleData->positionX[i] + particleData->velocityX[i] * simulation->timestepSize;
         particleData->positionY[i] = particleData->positionY[i] + particleData->velocityY[i] * simulation->timestepSize;
     }
 }
