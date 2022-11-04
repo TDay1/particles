@@ -20,8 +20,6 @@ void particleCollisions(Simulation* simulation, ParticleData* particleData) {
 
                 // 1. is there a collision?
                 // Calculate the Normal
-                //double nx = (particleData->positionX[j] - particleData->positionX[i]) / distance;
-                //double ny = (particleData->positionY[j] - particleData->positionY[i]) / distance;
                 // Unforutnately AVX code is unreadable so this may be difficult to follow.
                 
                 // Load particle coordinates into a vector
@@ -36,19 +34,35 @@ void particleCollisions(Simulation* simulation, ParticleData* particleData) {
                 double nx = deltaPositionOverDistance[0];
                 double ny = deltaPositionOverDistance[2];
 
-                // inner product the normal and velocity
-                double innerNormalI = particleData->velocityX[i] * nx + particleData->velocityY[i] * ny;
-                double innerNormalJ = particleData->velocityX[j] * nx + particleData->velocityY[j] * ny;
                 // Calculate the tangent
                 double tx = -ny;
                 double ty = nx;
 
-                // inner product the tangent and velocity
-                double innerTangentI = particleData->velocityX[i] * tx + particleData->velocityY[i] * ty;
-                double innerTangentJ = particleData->velocityX[j] * tx + particleData->velocityY[j] * ty;
+                // AVX quadruple dot product
+                // in only two AVX mul_pd and one hadd_pd we can calculate 4 dot products!
+
+                // load x and y components of each velocity into vector
+                __m256d velocityVector = _mm256_set_pd(particleData->velocityX[i], particleData->velocityY[i], particleData->velocityX[j], particleData->velocityY[j]);
+                // Load x and y components of the normals into vector
+                __m256d normVector = _mm256_set_pd(nx, ny, nx, ny);
+                // Multiply
+                __m256d normalDots = _mm256_mul_pd(velocityVector, normVector);
+
+                // Load x and y components of tangents into vector
+                __m256d tanVector = _mm256_set_pd(tx, ty, tx, ty);
+                // Multiply
+                __m256d tangentDots = _mm256_mul_pd(velocityVector, tanVector);
                 
+                // Now, since the vectors being dotted are 2x1, we can use hadd for the summing step 
+                __m256d dotProds = _mm256_hadd_pd(normalDots, tangentDots);
+                
+                double innerNormalI = dotProds[2];
+                double innerNormalJ = dotProds[0];
+                double innerTangentI = dotProds[3];
+                double innerTangentJ = dotProds[1];
+
+
                 double overlap = 0.5f * (distance - (2.0f*radius));
-                
                 
                 double newPositionXI = particleData->positionX[i] - overlap * (particleData->positionX[i] - particleData->positionX[j])/distance;
                 double newPositionYI = particleData->positionY[i] - overlap * (particleData->positionY[i] - particleData->positionY[j])/distance;
