@@ -12,10 +12,11 @@ void particleCollisions(Simulation* simulation, ParticleData* particleData) {
     for (int i = 0; i < simulation->numParticles; i += 1) {
         for (int j = i+1; j < 500; j++) {
            
-            double distance = sqrt(pow(particleData->positionX[i]-particleData->positionX[j], 2) 
-                    + pow(particleData->positionY[i]-particleData->positionY[j], 2));
-            if (distance < 2*radius) {
-                
+            double distanceSquared = pow(particleData->positionX[i]-particleData->positionX[j], 2) 
+                    + pow(particleData->positionY[i]-particleData->positionY[j], 2);
+
+            // Colliding if distance < 2 (radius=1), thus for squared distance:
+            if (distanceSquared < 4) {
                 // The following calculates the x and y normals of the velocities.
 
                 // 1. is there a collision?
@@ -25,6 +26,7 @@ void particleCollisions(Simulation* simulation, ParticleData* particleData) {
                 // Load particle coordinates into a vector
                 __m256d positionVector = _mm256_set_pd(particleData->positionY[i], particleData->positionY[j], particleData->positionX[i], particleData->positionX[j]);
                 // fill a vector with the distances 
+                double distance = sqrt(distanceSquared);
                 __m256d distanceVector = _mm256_set1_pd(distance);
                 // Divide positions by distance
                 __m256d positionOverDistance = _mm256_div_pd(positionVector, distanceVector);
