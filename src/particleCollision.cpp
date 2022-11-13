@@ -3,10 +3,7 @@
 #include <stdio.h>
 
 void particleCollisions(Simulation *simulation, ParticleData *particleData) {
-
-  // double particleCoordinates[4];
-  // double particleVelocity[4];
-
+  
   double radius = simulation->radius;
   // fluid (particle-particle) collisions
   for (int i = 0; i < simulation->numParticles; i += 1) {
