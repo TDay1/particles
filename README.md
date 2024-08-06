@@ -1,11 +1,11 @@
-# Particles - COSC3500 Major Project Milestone 2
+# Particles - High performance computing assignment
 
 A Parallel implementation of a 2D fluid (particle) simulation.
 ---
 
 ## Summary
 This repository contains a 2D fluid simulation in C++ developed for the Major project Milestone 1.
-If you have any issues building or running please don't hesitate to reach out: `thomas.day@uqconnect.edu.au`.
+If you have any issues building or running please don't hesitate to reach out: <REDACTED>.
 All code in this project is POSIX-compliant C++11.
 
 ## Building
